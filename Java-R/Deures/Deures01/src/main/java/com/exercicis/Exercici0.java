@@ -214,7 +214,7 @@ public class Exercici0 {
         };
 
         for ( String valido : validos) {
-            if (validos.equals(tipo)) {
+            if (valido.equals(tipus)) {
                 return true;
             }
         }
@@ -479,8 +479,8 @@ public class Exercici0 {
         // obtenemos los datos del cliente
         Map<String, Object> dadesClient = clients.get(clauClient);
 
-        if (!dadesClient.containsKey(dato)) {
-            return "El camp '"+dato+"' no existeix en aquest client.";
+        if (!dadesClient.containsKey(camp)) {
+            return "El camp '"+camp+"' no existeix en aquest client.";
         }
 
         dadesClient.put(camp, nouValor);
@@ -551,7 +551,7 @@ public class Exercici0 {
                 if (condicionsComplertes) {
                     HashMap<String, HashMap<String, Object>> clientResult = new HashMap<>();
                     clientResult.put(clau, clientData);
-                    reult.add(clientResult);
+                    result.add(clientResult);
                 }
             }
         }
@@ -717,9 +717,9 @@ public class Exercici0 {
         return result;
     }
 
-    private static boolean compleixCondicions(HashMap<String, Oject> operacio, HashMap<String, Object> condicions) {
+    private static boolean compleixCondicions(HashMap<String, Object> operacio, HashMap<String, Object> condicions) {
         for (Map.Entry<String, Object> entry : condicions.entrySet()) {
-            Strin key = entry.getKey();
+            String key = entry.getKey();
             Object value = entry.getValue();
             if (!operacio.containsKey(key) || !operacio.get(key).equals(value)) {
                 return false;
@@ -786,7 +786,7 @@ public class Exercici0 {
         for (Object[] columna : columnes) {
             String text = (String) columna[0];
             String alineacion = (String) columna[1];
-            int amplada = (int) coluna[2];
+            int amplada = (int) columna[2];
             
             // trucanr el texto en caso de ser mas largo que la amplitud
             if (text.length() > amplada) {
@@ -919,7 +919,7 @@ Impostos:  21% (14.41)                     Total: 83.04
 
             int descomptePercentatge = 10;
             double preuDescomptat = sumaPreu * ((100 - descomptePercentatge) / 100.0);
-            duble impostos = preuDescomptat * 0.21;
+            double impostos = preuDescomptat * 0.21;
             double total = preuDescomptat + impostos;
 
             ArrayList<Object[]> columnesTotals = new ArrayList<>();
@@ -1056,7 +1056,7 @@ Impostos:  21% (14.41)                     Total: 83.04
 
             try {
                 int indice = Integer.parseInt(opcio);
-                if (indece == 0) {
+                if (indice == 0) {
                     return "sortir";
 
                 } else if (indice > 0 && indice < menu.size() - 1) {
@@ -1406,7 +1406,7 @@ Impostos:  21% (14.41)                     Total: 83.04
 
             switch (opcio.toLowerCase(Locale.ROOT)) {
                 case "sortir":
-                    dibuixarLlista(new ArrayList<>(Lis.of("Fins aviat!")));
+                    dibuixarLlista(new ArrayList<>(List.of("Fins aviat!")));
                     return;
                 case "afegir client":
                     resultat = afegirClientMenu(scanner);
