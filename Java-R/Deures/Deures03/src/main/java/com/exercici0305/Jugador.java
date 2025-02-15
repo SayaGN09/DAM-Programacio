@@ -2,25 +2,33 @@ package com.exercici0305;
 
 public class Jugador extends Participant implements Esportista, Competidor {
 
+    private String equip;
+
     public Jugador(String nom, int edat, String equip) {
         super(nom, edat);
+        this.equip = equip;
     }
 
     public String getEquip() {
-        return "";
+        return equip;
     }
 
-    public void setEquip(String value) {
+    public void setEquip(String equip) {
+        this.equip = equip;
     }
 
+    @Override
     public void entrenar() {
+        System.out.println("Entrenant com a jugador");
     }
 
+    @Override
     public void competir() {
+        System.out.println("Competint com a jugador");
     }
 
     @Override
     public String toString() {
-        return "";
+        return "Jugador: Nom = " + nom + ", edat = " + edat + ", equip = " + equip + " .";
     }
 }

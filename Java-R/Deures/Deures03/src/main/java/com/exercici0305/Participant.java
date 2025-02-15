@@ -5,25 +5,28 @@ public class Participant {
     protected int edat;
 
     public Participant(String nom, int edat) {
-
+        this.nom = nom;
+        this.edat = edat;
     }
 
     public String getNom() {
-        return "";
+        return nom;
     }
 
-    public void setNom(String value) {
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
     public int getEdat() {
-        return 0;
+        return edat;
     }
 
-    public void setEdat(int value) {
+    public void setEdat(int edat) {
+        this.edat = edat;
     }
 
     @Override
     public String toString() {
-        return "";
+        return "Participant: Nom = " + nom + ", edat = " + edat + " .";
     }
 }

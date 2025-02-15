@@ -2,7 +2,7 @@ package com.exercici0303;
 
 // Classe ConfiguracioGlobal
 public class ConfiguracioGlobal {
-    private static ConfiguracioGlobal instancia;
+    private static ConfiguracioGlobal instancia = null;
     private String idioma;
     private String zonaHoraria;
 
@@ -19,16 +19,18 @@ public class ConfiguracioGlobal {
     }
 
     public String getIdioma() {
-        return "";
+        return idioma;
     }
 
     public void setIdioma(String idioma) {
+        this.idioma = idioma;
     }
 
     public String getZonaHoraria() {
-        return "";
+        return zonaHoraria;
     }
 
     public void setZonaHoraria(String zonaHoraria) {
+        this.zonaHoraria = zonaHoraria;
     }
 }

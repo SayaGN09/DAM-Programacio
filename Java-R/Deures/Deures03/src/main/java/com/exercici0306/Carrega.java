@@ -1,28 +1,33 @@
 package com.exercici0306;
 
 public class Carrega {
-
+    
+    protected String descripcio;
+    protected double pes;
 
     public Carrega(String descripcio, double pes) {
-
+        this.descripcio = descripcio;
+        this.pes = pes;
     }
 
     public String getDescripcio() {
-        return "";
+        return descripcio;
     }
 
-    public void setDescripcio(String value) {
+    public void setDescripcio(String descripcio) {
+        this.descripcio = descripcio;
     }
 
     public double getPes() {
-        return 0.0;
+        return pes;
     }
 
-    public void setPes(double value) {
+    public void setPes(double pes) {
+        this.pes = pes;
     }
 
     @Override
     public String toString() {
-        return "";
+        return "Carrega: Descripcio = " + descripcio + ", pes = "+ pes + ".";
     }
 }

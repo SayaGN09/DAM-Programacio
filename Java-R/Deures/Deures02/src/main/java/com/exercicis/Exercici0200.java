@@ -72,7 +72,17 @@ public class Exercici0200 {
      * @test ./runTest.sh com.exercicis.TestExercici0200#testAddImaginariesLargeNumbers
      */
     public static String addImaginaries(String num0, String num1) {
-        return "";
+
+        num0 = num0.replace("i", "");
+        num1 = num1.replace("i", "");
+
+        String[] parts0 = num0.split("\\+");
+        String[] parts1 = num1.split("\\+");
+
+        int realSum = Integer.parseInt(parts0[0]) + Integer.parseInt(parts1[0]);
+        int imaginarySum = Integer.parseInt(parts0[1]) + Integer.parseInt(parts1[1]);
+
+        return realSum + " + " + imaginarySum + "i";
     }
 
     /**
@@ -87,6 +97,29 @@ public class Exercici0200 {
      * @test ./runTest.sh com.exercicis.TestExercici0200#testDrawPascalFive
      */
     public static void drawPascal(int n) {
+
+        if (n <= 0) {
+            return;
+        }
+
+        int[][] triangle = new int[n][n];
+
+        for (int i = 0; i < n; i++) {
+            triangle[i][0] = 1;
+            for (int j = 1; j <= i; j++) {
+                triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < n -i - 1; k++) {
+                System.out.println(" ");
+            }
+            for (int j = 0; j <= i; j++) {
+                System.out.println(triangle[i][j] + " ");
+            }
+            System.out.println();
+        }
 
     }
 
@@ -104,7 +137,13 @@ public class Exercici0200 {
      * @test ./runTest.sh com.exercicis.TestExercici0200#testAddListDecimals
      */
     public static double addList(ArrayList<Double> list) {
-        return 0.0;
+
+        double suma = 0.0;
+
+        for (double valor : list) {
+            suma += valor;
+        }
+        return suma;
     }
 
     /** 
