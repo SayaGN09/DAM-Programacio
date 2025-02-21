@@ -4,8 +4,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -75,8 +77,28 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarNom"
      */
     public static boolean validarNom(String nom) {
-        // TODO
+        nom = nom.toLowerCase();
+
+        if (nom.isEmpty()) {
         return false;
+        }
+
+        if (!nom.matches("^[a-zA-Z]+$")) {
+            return false;
+        }
+
+        int contadorL = 0;
+        for (char c : nom.toCharArray()) {
+            if (Character.isLetter(c)) {
+                contadorL++;
+            }
+        }
+
+        if (contadorL < 2) {
+            return false;
+        }
+
+        return true; 
     }
     
     /**
@@ -90,8 +112,12 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarEdat"
      */
     public static boolean validarEdat(int edat) {
-        // TODO
-        return false;
+
+        if (edat < 18 || edat > 100) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**
@@ -112,8 +138,26 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarFactors"
      */
     public static boolean validarFactors(String[] factors) {
-        // TODO
+
+        if (factors.length != 2) {
         return false;
+        }
+
+        if (factors[0].equals("autònom") && !factors[0].equals("empresa")) {
+            return false; 
+        }
+
+        if (!factors[1].equals("risc alt") &&
+            !factors[1].equals("risc mitjà") &&
+            !factors[1].equals("risc baix")
+            ) {
+            return false; 
+        }
+
+        if (factors[0].equals("autònom") && factors[1].equals("risc baix")) {
+        return false; 
+        }
+        return true;
     }
 
     /**
@@ -132,7 +176,11 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarDescompte"
      */
     public static boolean validarDescompte(double descompte) {
-        // TODO
+
+        if (descompte >= 0 && descompte <= 20) {
+            return true;
+        }
+
         return false;
     }
 
@@ -157,7 +205,20 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarTipusOperacio"
      */
     public static boolean validarTipusOperacio(String tipus) {
-        // TODO
+
+        String[] validos = {
+            "Declaració d'impostos", "Gestió laboral", "Assessoria fiscal",
+      "Constitució de societat", "Modificació d'escriptures",
+      "Testament", "Gestió d'herències", "Acta notarial",
+      "Contracte de compravenda", "Contracte de lloguer"
+        };
+
+        for ( String valido : validos) {
+            if (valido.equals(tipus)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -184,8 +245,23 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarClients"
      */
     public static boolean validarClients(ArrayList<String> clientsLlista, ArrayList<String> clientsGlobals) {
-        // TODO
-        return false;
+
+        if (clientsLlista == null) {
+            return false;
+        }
+        
+        HashSet<String> setCliente = new HashSet<>(clientsLlista);
+        if (setCliente.size() != clientsLlista.size()) {
+            return false;
+        }
+
+
+        for (String client : clientsLlista) {
+            if (!clientsGlobals.contains(client)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -197,8 +273,12 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testIsAllDigits"
      */
     public static boolean isAllDigits(String str) {
-        // TODO
-        return false;
+
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+
+        return str.matches("\\d+");
     }
 
     /**
@@ -223,8 +303,68 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarData"
      */
     public static boolean validarData(String data) {
-        // TODO
+
+        if (data == null || data.length() != 10) {
+            return false;
+        }
+
+        String[] separador = data.split("-");
+
+        if (separador.length != 3) {
+            return false;
+        }
+
+        String any = separador[0];
+        String mes = separador[1];
+        String dia = separador[2];
+
+        if (!any.matches("\\d{4}") || !mes.matches("\\d{2}") || !dia.matches("\\d{2}")) {
         return false;
+        }
+
+        //convertir a enteros para las comparaciones 
+        int anyInt = Integer.parseInt(any);
+        int mesInt = Integer.parseInt(mes);
+        int diaInt = Integer.parseInt(dia);
+
+        //verificacion del año dentro del rango
+        if (anyInt < 1000 || anyInt > 9999) {
+            return false;
+        }
+
+        //verificacion del mes dentro del rango 
+        if (mesInt < 1 || mesInt > 12) {
+            return false;
+        }
+
+        //verificacion del dia dentro del rango
+        if (diaInt < 1 || diaInt > 31) {
+            return false;
+        }
+
+        // verifiacion de la cantidad de dias segun el mes 
+
+        if (!diaValido(anyInt, mesInt, diaInt)) {
+            return false;
+        }
+        return true; 
+    }
+
+    public static boolean diaValido(int any, int mes, int dia) {
+        
+        // array con los numeros de dias de cada mes en orden
+        int[] diasporMes = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        //comprobacion de si es bisiesto
+        if(esBisiesto(any)) {
+            diasporMes[1] = 29; //cambiamos los dias a [1] febrero.
+        }
+
+        return dia <= diasporMes[mes-1];
+    }
+
+    public static boolean esBisiesto(int any) {
+        return (any % 4 == 0 && (any % 100 != 0 || any % 400 == 0));
     }
 
     /**
@@ -244,7 +384,11 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testValidarPreu"
      */
     public static boolean validarPreu(double preu) {
-        // TODO
+
+        if (preu > 100) {
+            return true;
+        }
+
         return false;
     }
 
@@ -258,8 +402,17 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testGeneraClauClient"
      */
     public static String generaClauClient() {
-        // TODO
-        return "";
+
+        Random random = new Random();
+        String clave;
+
+        do {
+            int numeroAleatori = 100 + random.nextInt(999);
+            //formato de la clave 
+            clave = "client_"+numeroAleatori;
+        } while (clients.containsKey(clave)); // verificamos que no hayan mas claves iguales
+
+        return clave;
     }
 
     /**
@@ -281,8 +434,18 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testAfegirClient"
      */
     public static String afegirClient(String nom, int edat, ArrayList<String> factors, double descompte) {
-        // TODO
-        return "";
+
+        String nuevaClave = generaClauClient();
+
+        Map<String, Object> dadesClient = new HashMap<>();
+        dadesClient.put("nom", nom);
+        dadesClient.put("edat", edat);
+        dadesClient.put("factors", factors);
+        dadesClient.put("descompte", descompte);
+
+        clients.put(nuevaClave, dadesClient);
+
+        return nuevaClave;
     }
 
     /**
@@ -306,8 +469,23 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testModificarClient"
      */
     public static String modificarClient(String clauClient, String camp, Object nouValor) {
-        // TODO
-        return "";
+
+        // comprovar si el client existeix al diccionari
+        if (!clients.containsKey(clauClient)) {
+            return "Client '" + clauClient + "' no existeix.";
+
+        }
+
+        // obtenemos los datos del cliente
+        Map<String, Object> dadesClient = clients.get(clauClient);
+
+        if (!dadesClient.containsKey(camp)) {
+            return "El camp '"+camp+"' no existeix en aquest client.";
+        }
+
+        dadesClient.put(camp, nouValor);
+
+        return "OK";
     }
 
     /**
@@ -326,8 +504,16 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testEsborrarClient"
      */
     public static String esborrarClient(String clauClient) {
-        // TODO
-        return "";
+        //comprovacio de si la clau existeix
+        if (!clients.containsKey(clauClient)) {
+            return "Client amb clau " + clauClient + " no existeix.";
+
+        }
+
+        //eliminem el client 
+        clients.remove(clauClient);
+
+        return "OK";
     }
 
     /**
@@ -347,8 +533,7 @@ public class Exercici0 {
             HashMap<String, Object> condicions) {
         
         // TODO
-        ArrayList<HashMap<String, HashMap<String, Object>>> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -361,8 +546,21 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testGeneraClauOperacio"
      */
     public static String generaClauOperacio() {
-        // TODO
-        return "";
+
+        Random random = new Random();
+
+        String clau;
+        boolean clauExistent;
+
+        do {
+            int numeroAleatori = random.nextInt(999) + 100; 
+            clau = "operacio_" + numeroAleatori;
+
+            clauExistent = operacions.containsKey(clau);
+        } while (clauExistent);
+        
+
+        return clau;
     }
 
     /**
@@ -393,8 +591,19 @@ public class Exercici0 {
             String observacions,
             double preu) {
 
-        // TODO
-        return "";
+        String clauOperacio = generaClauOperacio();
+
+        HashMap<String, Object> operacio = new HashMap<>();
+        operacio.put("id", clauOperacio);
+        operacio.put("tipus", tipus);
+        operacio.put("clients", clientsImplicats);
+        operacio.put("data", data);
+        operacio.put("observacions", observacions);
+        operacio.put("preu", preu);
+
+        operacions.put(clauOperacio, operacio);
+
+        return clauOperacio;
     }
 
     /**
@@ -409,8 +618,27 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testModificarOperacio"
      */
     public static String modificarOperacio(String idOperacio, String camp, Object nouValor) {
-        // TODO
-        return "";
+
+        // verificacion de si la operacion existe
+        if (!operacions.containsKey(idOperacio)) {
+            return "L'operació amb id '" + idOperacio + "' no existeix.";
+
+        }
+
+        // obtenems la operacion
+        HashMap<String, Object> operacio = operacions.get(idOperacio);
+
+
+        //verificar si el campo existe dentro de la operacion
+        if (!operacio.containsKey(camp)) {
+            return "El camp '" + camp + "' no existeix en l'operació.";
+
+        }
+
+        //actualizamos el valor del campo 
+        operacio.put(camp, nouValor);
+
+        return "Ok";
     }
 
     /**
@@ -422,8 +650,14 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testEsborrarOperacio"
      */
     public static String esborrarOperacio(String idOperacio) {
-        // TODO
-        return "";
+
+        if (!operacions.containsKey(idOperacio)) {
+            return "Loperació amb id '" + idOperacio + "' no existeix.";
+        }
+
+        operacions.remove(idOperacio);
+
+        return "Ok";
     }
 
     /**
@@ -442,8 +676,7 @@ public class Exercici0 {
             HashMap<String, Object> condicions) {
 
         // TODO
-        ArrayList<HashMap<String, Object>> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -456,8 +689,7 @@ public class Exercici0 {
      */
     public static ArrayList<HashMap<String, Object>> llistarOperacionsClient(String clauClient) {
         // TODO
-        ArrayList<HashMap<String, Object>> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -485,8 +717,41 @@ public class Exercici0 {
      * @test ./runTest.sh "com.exercicis.TestExercici0#testAlineaColumnes"
      */
     public static String alineaColumnes(ArrayList<Object[]> columnes) {
-        // TODO
-        return "";
+
+        StringBuilder resultat = new StringBuilder();
+
+        for (Object[] columna : columnes) {
+            String text = (String) columna[0];
+            String alineacion = (String) columna[1];
+            int amplada = (int) columna[2];
+            
+            // trucanr el texto en caso de ser mas largo que la amplitud
+            if (text.length() > amplada) {
+                text = text.substring(0, amplada);
+            }
+
+            //calculamos el numero de espacios
+            int espais = amplada - text.length();
+
+            switch (alineacion) {
+                case "left": // alineamos a la izq 
+                    text = String.format("%-"+amplada+"s",text);
+                    break;
+                case "right":
+                    text = String.format("%-"+amplada+"s",text);
+                    break;
+                case "center":
+                int leftPadding = espais / 2;
+                int rightPadding = espais -leftPadding;
+                text = " ".repeat(leftPadding) + text + " ".repeat(rightPadding);
+                break;
+                
+            }
+
+            resultat.append(text);
+        }
+
+        return resultat.toString();
     }
 
     /**
@@ -541,8 +806,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> taulaOperacionsClient(String clauClient, String ordre) {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -586,8 +850,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> getLlistarClientsMenu() {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -598,7 +861,11 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @test ./runTest.sh "com.exercicis.TestExercici0#testDibuixarLlista"
      */
     public static void dibuixarLlista(ArrayList<String> llista) {
-        // TODO
+
+        for (String linea : llista) {
+            System.out.println(linea);
+        }
+
     }
     
 
@@ -628,8 +895,36 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @test ./runTest.sh "com.exercicis.TestExercici0#testObtenirOpcio"
      */
     public static String obtenirOpcio(Scanner scanner) {
-        // TODO
-        return "";
+
+        ArrayList<String> menu = getCadenesMenu();
+
+        while (true) {
+            System.out.println("Selecciona una opció(numero o paraula clau): ");
+            String opcio = scanner.nextLine().trim();
+
+            try {
+                int indice = Integer.parseInt(opcio);
+                if (indice == 0) {
+                    return "sortir";
+
+                } else if (indice > 0 && indice < menu.size() - 1) {
+                    return menu.get(indice).substring(2).trim();
+                }
+            } catch (NumberFormatException e) {
+            }
+
+            String opcioNormalized = opcio.toLowerCase().replace("ó", "o");
+            for (int i = 1; i < menu.size() - 1; i++) {
+                String paraulaClau = menu.get(i).substring(3).trim();
+                String paraulaClauNormalized = paraulaClau.toLowerCase().replace("ó", "o");
+                if (paraulaClauNormalized.equals(opcioNormalized)) {
+                    return paraulaClau;
+                }
+            }
+
+            System.out.println("Opció no vàlida. Torna a intentar-ho.");
+        }
+
     }
 
     /**
@@ -644,8 +939,17 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @test ./runTest.sh "com.exercicis.TestExercici0#testLlegirNom"
      */
     public static String llegirNom(Scanner scanner) {
-        // TODO
-        return "";
+
+        System.out.print("Introdueix el nom del client:");
+        String nom = scanner.nextLine();
+
+        while (!nom.matches("[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+)*")) {
+            System.out.println("Nom no valid. Nomes s'accepten lletres i espais.");
+            System.out.print("Introdueix el nom del client: ");
+            nom = scanner.nextLine().trim();
+        }
+
+        return nom;
     }
 
     /**
@@ -660,8 +964,17 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @test ./runTest.sh "com.exercicis.TestExercici0#testLlegirEdat"
      */
     public static int llegirEdat(Scanner scanner) {
-        // TODO
-        return 0;
+
+        System.out.print("Introdueix l'edat del client (18-100): ");
+        String edatStr = scanner.nextLine();
+
+        while (!isAllDigits(edatStr) || !validarEdat(Integer.parseInt(edatStr))) {
+            System.out.println("Edat no valida. Ha de ser un numero entre 18 i 100.");
+            System.out.println("Introdueix l'edat del client (18-100): ");
+            edatStr = scanner.nextLine().trim();
+        }
+
+        return Integer.parseInt(edatStr);
     }
     
     /**
@@ -682,8 +995,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> llegirFactors(Scanner scanner) {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
     
     /**
@@ -700,8 +1012,17 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @test ./runTest.sh "com.exercicis.TestExercici0#testLlegirDescompte"
      */
     public static double llegirDescompte(Scanner scanner) {
-        // TODO
-        return 0.0;
+        
+        System.out.print("Introdueix el descompte (0-20): ");
+        String descompteInput = scanner.nextLine().trim();
+
+        while (!isAllDigits(descompteInput) || !validarDescompte(Integer.parseInt(descompteInput))) {
+            System.out.println("Descompte no valid. Ha de ser un numero entre 0 i 20.");
+            System.out.print("Introdueix el descompte (0-20): ");
+            descompteInput = scanner.nextLine().trim();
+        }
+
+        return Double.parseDouble(descompteInput);
     }
 
     /**
@@ -733,8 +1054,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> afegirClientMenu(Scanner scanner) {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
     
     /**
@@ -778,8 +1098,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> modificarClientMenu(Scanner scanner) {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -803,8 +1122,7 @@ Impostos:  21% (14.41)                     Total: 83.04
      */
     public static ArrayList<String> esborrarClientMenu(Scanner scanner) {
         // TODO
-        ArrayList<String> rst = new ArrayList<>();
-        return rst;
+        return null;
     }
 
     /**
@@ -826,7 +1144,38 @@ Impostos:  21% (14.41)                     Total: 83.04
      * @param scanner L'objecte Scanner per llegir l'entrada de l'usuari.
      */
     public static void gestionaClientsOperacions(Scanner scanner) {
-        // TODO
+
+        ArrayList<String> menu = getCadenesMenu();
+        ArrayList<String> resultat = new ArrayList<>();
+
+        while (true) {
+            clearScreen();
+            dibuixarLlista(menu);
+            dibuixarLlista(resultat);
+
+            String opcio = obtenirOpcio(scanner);
+
+            switch (opcio.toLowerCase(Locale.ROOT)) {
+                case "sortir":
+                    dibuixarLlista(new ArrayList<>(List.of("Fins aviat!")));
+                    return;
+                case "afegir client":
+                    resultat = afegirClientMenu(scanner);
+                    break;
+                case "modificar client":
+                    resultat = modificarClientMenu(scanner);    
+                    break;
+                case "esborrar client":
+                    resultat = esborrarClientMenu(scanner);
+                    break;
+                case "llistar clients":
+                    resultat = getLlistarClientsMenu();
+                    break;
+                default:
+                    resultat = new ArrayList<>(List.of("Opcio no valida. Torna a intentar-ho"));
+            }
+        }
+
     }
 
     /**
