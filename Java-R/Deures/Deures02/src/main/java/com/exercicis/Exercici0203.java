@@ -7,7 +7,11 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import javax.management.openmbean.ArrayType;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +78,26 @@ public class Exercici0203 {
      * @test ./runTest.sh com.exercicis.TestExercici0203#testValidarURL
      */
     public static boolean validarURL(String url) {
-        return false;
+        if (url == null || url.isEmpty() || url.contains(" ")) {
+            return false;
+        } else if (!url.startsWith("http://") && !url.startsWith("https://")){
+            return false;
+        }
+
+        String senseProtocol = url.substring(url.indexOf("://") + 3);
+
+        String domini = "";
+        if (senseProtocol.contains("/")) {
+            domini = senseProtocol.split("/", 2)[0];
+        } else {
+            domini = senseProtocol;
+        }
+
+        if (!domini.contains(".") || domini.startsWith(".") || domini.endsWith(".")) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**
@@ -96,6 +119,35 @@ public class Exercici0203 {
      */
     public static ArrayList<HashMap<String, Object>> loadMonuments(String filePath) throws IOException {
         ArrayList<HashMap<String, Object>> rst = new ArrayList<>();
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        JSONArray monumentsArray = new JSONObject(content).getJSONArray("monuments");
+        for (int i = 0; i < monumentsArray.length(); i++) {
+            JSONObject monument = monumentsArray.getJSONObject(i);
+            HashMap<String, Object> monumentHM = new HashMap<>();
+
+            for (String key : monument.keySet()) {
+                if (key.equals("nom") || key.equals("pais") || key.equals("categoria")) {
+                    monumentHM.put(key, monument.get(key));
+                } else if (key.equals("detalls")) {
+                    JSONObject detalls = monument.getJSONObject(key);
+                    HashMap<String, Object> detallsMap = new HashMap<>();
+                    HashMap<String, Object> altres = new HashMap<>();
+                    for (String detallsKey : detalls.keySet()) {
+                        if (!detallsKey.equals("any_declaracio") && !detallsKey.equals("coordenades")) {
+                            HashMap<String, Object> altre = new HashMap<>();
+                            altre.put("clau", detallsKey);
+                            altre.put("valor", detalls.get(detallsKey));
+                            altres.put(detallsKey, altre);
+                        } else {
+                            detallsMap.put(detallsKey, detalls.get(detallsKey));
+                        }
+                    }
+                    detallsMap.put("altres", altres);
+                    monumentHM.put(key, detallsMap);
+                }
+            }
+            rst.add(monumentHM);
+        }
         return rst;
     }
 
@@ -118,8 +170,30 @@ public class Exercici0203 {
      * @test ./runTest.sh com.exercicis.TestExercici0203#testGetMonumentValue
      */
     private static Object getMonumentValue(HashMap<String, Object> monument, String key) {
+
+        if (key.equals("nom") || key.equals("pais") || key.equals("categoria")) {
+            return monument.get(key);
+
+        } else if (key.equals("any")) {
+            HashMap<String, Object> detalls = (HashMap<String, Object>) monument.get("detalls");
+
+            if (detalls == null) {
+                return null;
+            } else {
+                return detalls.get("any_declaracio");
+            }
+
+        } else if (key.equals("latitud") || key.equals("longitud")) {
+            HashMap<String, Object> detalls = (HashMap<String, Object>) monument.get("detalls");                   
+            if (detalls != null) {
+                HashMap<String, Object> coordenades = (HashMap<String, Object>) detalls.get("coordenades");
+                if (coordenades != null) {
+                    return coordenades.get(key);
+                }
+            }
+        }
         return null;
-    }
+    } 
     
 
     /**
@@ -131,7 +205,13 @@ public class Exercici0203 {
      * 
      * @test ./runTest.sh com.exercicis.TestExercici0203#testIsValidValue
      */
-    private static boolean isValid(String value, String[] validValues) {
+    public static boolean isValid(String value, String[] validValues) {
+
+        for (String valid : validValues) {
+            if (valid.equals(value)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -148,8 +228,26 @@ public class Exercici0203 {
      * @test ./runTest.sh com.exercicis.TestExercici0203#testOrdenaMonuments
      */
     public static ArrayList<HashMap<String, Object>> ordenaMonuments(ArrayList<HashMap<String, Object>> monuments, String sortKey) throws IllegalArgumentException {
-
         ArrayList<HashMap<String, Object>> rst = new ArrayList<>(monuments);
+
+        if (!isValid(sortKey, new String[]{"nom", "any", "latitud", "longitud"})) {
+            throw new IllegalArgumentException("Columna invalida");
+        }
+
+        Collections.sort(rst, (m1, m2) -> {
+            Object value1 = getMonumentValue(m1, sortKey);
+            Object value2 = getMonumentValue(m2, sortKey);
+
+            if (sortKey.equals("nom")) {
+                return ((String) value1).compareTo((String) value2);
+            } else if (sortKey.equals("any")) {
+                return ((Integer) value1).compareTo((Integer) value2);
+            } else if (sortKey.equals("latitud") || sortKey.equals("longitud")) {
+                return ((Double) value1).compareTo((Double) value2);
+            }
+
+            return 0;
+        });
         return rst;
     }
 
@@ -168,7 +266,17 @@ public class Exercici0203 {
      */
     public static ArrayList<HashMap<String, Object>> filtraMonuments(ArrayList<HashMap<String, Object>> monuments, String filterKey, String filterValue) throws IllegalArgumentException {
 
-        return new ArrayList<>();
+        if (!isValid(filterKey, new String[]{"nom", "pais", "categoria"})) {
+            throw new IllegalArgumentException("Invalido");
+        }
+
+        ArrayList<HashMap<String, Object>> monumentsFiltrats = new ArrayList<>();
+        for (HashMap<String, Object> monument : monuments) {
+            if (filterValue.equals(monument.get(filterKey))) {
+                monumentsFiltrats.add(monument);
+            }
+        }
+        return monumentsFiltrats;
     }
 
     /**
