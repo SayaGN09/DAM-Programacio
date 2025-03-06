@@ -169,7 +169,7 @@ public class Exercici0203 {
      * 
      * @test ./runTest.sh com.exercicis.TestExercici0203#testGetMonumentValue
      */
-    private static Object getMonumentValue(HashMap<String, Object> monument, String key) {
+    public static Object getMonumentValue(HashMap<String, Object> monument, String key) {
 
         if (key.equals("nom") || key.equals("pais") || key.equals("categoria")) {
             return monument.get(key);
@@ -267,7 +267,7 @@ public class Exercici0203 {
     public static ArrayList<HashMap<String, Object>> filtraMonuments(ArrayList<HashMap<String, Object>> monuments, String filterKey, String filterValue) throws IllegalArgumentException {
 
         if (!isValid(filterKey, new String[]{"nom", "pais", "categoria"})) {
-            throw new IllegalArgumentException("Invalido");
+            throw new IllegalArgumentException("Columna invalida");
         }
 
         ArrayList<HashMap<String, Object>> monumentsFiltrats = new ArrayList<>();
@@ -293,7 +293,20 @@ public class Exercici0203 {
      * @test ./runTest.sh com.exercicis.TestExercici0203#testGeneraMarcTaula
      */
     public static String generaMarcTaula(int[] columnWidths, char[] separators) {
-        return "";
+
+        StringBuilder rst = new StringBuilder();
+        rst.append(separators[0]);
+        for (int i = 0; i < columnWidths.length; i++) {
+            for (int j = 0; j < columnWidths[i]; j++) {
+                rst.append('─');
+            }
+            if (i < columnWidths.length - 1) {
+                rst.append(separators[1]);
+            }
+        }
+        rst.append(separators[2]);
+
+        return rst.toString();
     }
 
     /**
@@ -305,17 +318,26 @@ public class Exercici0203 {
      *
      * Exemples:
      * formatRow(new String[]{"Nom", "País", "Any"}, new int[]{10, 6, 4});
-     * Retorna: "│ Nom       │ País  │ Any  │"
+     * Retorna: "│Nom       │País  │Any │"
      *
      * formatRow(new String[]{"Machu Picchu", "Perú", "1983"}, new int[]{10, 6, 4});
-     * Retorna: "│ Machu Picchu │ Perú  │ 1983 │"
+     * Retorna: "│Machu Picc│Perú  │1983│"
      *
      * @param values Array amb els valors de cada columna.
      * @param columnWidths Array amb l'amplada de cada columna.
      * @return Una cadena de text formatejada representant una fila de la taula.
+     *    
+     * @test ./runTest.sh com.exercicis.TestExercici0203#testFormatRow
      */
-    private static String formatRow(String[] values, int[] columnWidths) {
-        return "";
+    public static String formatRow(String[] values, int[] columnWidths) {
+
+        StringBuilder row = new StringBuilder();
+        row.append("│ ");
+        for (int i = 0; i < values.length; i++) {
+            row.append(String.format("%-" + columnWidths[i] + "s", values[i])); 
+            row.append(" │"); 
+        }
+        return row.toString();
     }
 
     /**
@@ -341,7 +363,7 @@ public class Exercici0203 {
      * @return Una cadena de text amb les coordenades en format "latitud,longitud",
      *         o una cadena buida si no es troben les dades.
      */
-    private static String getCoordsString(HashMap<String, Object> monument) {
+    public static String getCoordsString(HashMap<String, Object> monument) {
 
         return "";
     }

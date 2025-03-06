@@ -194,7 +194,7 @@ public class Resolt0203 {
      * 
      * @test ./runTest.sh com.exercicis.TestExercici0203#testGetMonumentValue
      */
-    private static Object getMonumentValue(HashMap<String, Object> monument, String key) {
+    public static Object getMonumentValue(HashMap<String, Object> monument, String key) {
         if (monument == null) return null;
     
         if (key.equals("nom") || key.equals("pais") || key.equals("categoria")) {
@@ -228,7 +228,7 @@ public class Resolt0203 {
      * 
      * @test ./runTest.sh com.exercicis.TestExercici0203#testIsValidValue
      */
-    private static boolean isValid(String value, String[] validValues) {
+    public static boolean isValid(String value, String[] validValues) {
         for (String valid : validValues) {
             if (valid.equals(value)) {
                 return true;
@@ -353,7 +353,7 @@ public class Resolt0203 {
      * @param columnWidths Array amb l'amplada de cada columna.
      * @return Una cadena de text formatejada representant una fila de la taula.
      */
-    private static String formatRow(String[] values, int[] columnWidths) {
+    public static String formatRow(String[] values, int[] columnWidths) {
         StringBuilder row = new StringBuilder("│");
         for (int i = 0; i < values.length; i++) {
             row.append(String.format(" %-" + columnWidths[i] + "s │", values[i]));
@@ -384,7 +384,7 @@ public class Resolt0203 {
      * @return Una cadena de text amb les coordenades en format "latitud,longitud",
      *         o una cadena buida si no es troben les dades.
      */
-    private static String getCoordsString(HashMap<String, Object> monument) {
+    public static String getCoordsString(HashMap<String, Object> monument) {
         if (monument.containsKey("detalls")) {
             HashMap<?, ?> detalls = (HashMap<?, ?>) monument.get("detalls");
             if (detalls.containsKey("coordenades")) {
