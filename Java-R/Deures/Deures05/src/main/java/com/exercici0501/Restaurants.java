@@ -3,27 +3,65 @@ package com.exercici0501;
 import java.security.InvalidParameterException;
 
 public class Restaurants {
- 
+
     /**
      * Crea les taules de l'enunciat, 
      * si ja existeixen primer les esborra
      */
     public static void crearTaules() {
-
+        AppData db = AppData.getInstance();
+        db.update("DROP TABLE IF EXISTS restaurants");
+        db.update("DROP TABLE IF EXISTS clients");
+        db.update("DROP TABLE IF EXISTS serveis");
+        String sql = """
+            CREATE TABLE restaurants (
+                id_restaurant INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                kind TEXT NOT NULL,
+                tables INTEGER NOT NULL,
+                pricing TEXT NOT NULL
+            )""";
+        db.update(sql);
+        sql = """
+            CREATE TABLE clients (
+                id_client INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                birth DATE NOT NULL,
+                isVIP BOOLEAN NOT NULL
+            )""";
+        db.update(sql);
+        sql = """
+            CREATE TABLE services (
+                id_servei INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_restaurant INTEGER NOT NULL,
+                id_client INTEGER NOT NULL,
+                date DATE NOT NULL,
+                expenditure REAL NOT NULL,
+                FOREIGN KEY (id_restaurant) REFERENCES restaurants(id_restaurant),
+                FOREIGN KEY (id_client) REFERENCES clients(id_client)
+            )""";
+        db.update(sql);
     }
 
     /**
      * Afegeix un restaurant a la base de dades
      */
     public static void addRestaurant(int idRestaurant, String name, String kind, int tables, String pricing) {
+        AppData db = AppData.getInstance();
+        String sql = String.format("INSERT INTO restaurants (id_restaurant, name, kind, tables, pricing ) VALUES ('%d', '%s','%s','%d','%s')",idRestaurant,name,kind,tables,pricing);
+        db.update(sql);
     }
 
     public static int addClient(String name, String birth, boolean isVIP) {
-        return 0;
+        AppData db = AppData.getInstance();
+        String sql = String.format("INSERT INTO clients (name, birth, isVIP) VALUES ('%s', '%s', '%b')", name, birth, isVIP);
+        return db.insertAndGetId(sql);
     }
 
     public static int addService(int idRestaurant, int idClient, String date, double expenditure) {
-        return 0;
+        AppData db = AppData.getInstance();
+        String sql = String.format("INSERT INTO services (id_restaurant, id_client, date, expenditure) VALUES ('%d', '%d', '%s', '%f')", idRestaurant, idClient, date, expenditure);
+        return db.insertAndGetId(sql);
     }
 
     /** 
@@ -39,7 +77,49 @@ public class Restaurants {
      * - S'ha afegit un nou 'servei' amb 'id': 5
      */
     public static void loadData(String filePath) {
+        AppData db = AppData.getInstance();
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONObject jsonObject = new JSONObject(content);
 
+            JSONArray restaurants = jsonObject.getJSONArray("restaurants");
+            for (int i = 0; i < restaurants.length(); i++) {
+                JSONObject restaurant = restaurants.getJSONObject(i);
+                addRestaurant(
+                    restaurant.getInt("id_restaurant"),
+                    restaurant.getString("name"),
+                    restaurant.getString("kind"),
+                    restaurant.getInt("tables"),
+                    restaurant.getString("pricing")
+                );
+                System.out.println("S'ha afegit un nou 'restaurant' amb 'id': " + restaurant.getInt("id_restaurant"));
+            }
+
+            JSONArray clients = jsonObject.getJSONArray("clients");
+            for (int i = 0; i < clients.length(); i++) {
+                JSONObject client = clients.getJSONObject(i);
+                int clientId = addClient(
+                    client.getString("name"),
+                    client.getString("birth"),
+                    client.getBoolean("isVIP")
+                );
+                System.out.println("S'ha afegit un nou 'client' amb 'id': " + id_client);
+            }
+
+            JSONArray serveis = jsonObject.getJSONArray("services");
+            for (int i = 0; i < serveis.length(); i++) {
+                JSONObject servei = serveis.getJSONObject(i);
+                int serveiId = addService(
+                    servei.getInt("id_restaurant"),
+                    servei.getInt("id_client"),
+                    servei.getString("date"),
+                    servei.getDouble("expenditure")
+                );
+                System.out.println("S'ha afegit un nou 'serveir' amb 'id': " + id_servei);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
