@@ -17,13 +17,14 @@ public class Main {
 
         // Crear el singleton (això es connecta a la base de dades)
         AppData db = AppData.getInstance();
-        db.connect("//localhost:3308/world?useSSL=false&allowPublicKeyRetrieval=true");
+        db.connect("//localhost:3306/hr?useSSL=false&allowPublicKeyRetrieval=true", "root", "admin");
 
         System.out.println("\nLlistar totes les taules:");
         llistarTaules();
 
         System.out.println("\nLes 10 últimes ciutats de la taula 'city':");
-        llistarUltimesCiutats();
+        //llistarUltimesCiutats();
+        llistarUltimsCountries();
 
         // Tancar la connexió amb la base de dades (del singleton)
         db.close();
@@ -57,17 +58,17 @@ public class Main {
      * Executa la consulta "SELECT * FROM city ORDER BY ID DESC LIMIT 10;" i imprimeix
      * els detalls de cada ciutat.
      */
-    public static void llistarUltimesCiutats() {
+    public static void llistarUltimsCountries() {
         // Obtenir un apuntador al singleton de la base de dades
         AppData db = AppData.getInstance();
 
         // Llistar les 10 últimes ciutats utilitzant ArrayList i HashMap
-        ArrayList<HashMap<String, Object>> ciutats = db.query("SELECT * FROM city ORDER BY ID DESC LIMIT 10;");
+        ArrayList<HashMap<String, Object>> ciutats = db.query("SELECT * FROM countries ORDER BY country_id DESC LIMIT 10;");
 
         System.out.println("Dades de les ciutats:");
         for (HashMap<String, Object> ciutat : ciutats) {
-            System.out.println(ciutat.get("Name") + ", " + ciutat.get("CountryCode") + ", " 
-                    + ciutat.get("District") + ", " + ciutat.get("Population"));
+            System.out.println(ciutat.get("country_name") + ", " + ciutat.get("country_id") + ", " 
+                    + ciutat.get("region_id"));
         }
     }
 }
