@@ -11,6 +11,9 @@ public class Controller {
     private Button buttonAdd;
 
     @FXML
+    private Button buttonSubtract;
+
+    @FXML
     private Text textCounter;
 
     private int counter = 0;
@@ -18,6 +21,12 @@ public class Controller {
     @FXML
     private void actionAdd(ActionEvent event) {
         counter++;
+        textCounter.setText(String.valueOf(counter));
+    }
+
+    @FXML
+    private void actionSubtract(ActionEvent event) {
+        counter--;
         textCounter.setText(String.valueOf(counter));
     }
 }
