@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exercici0601.ControllerCharacters">
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exercici0601.ControllerGames">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" style="-fx-background-color: rgb(100,200,200);" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER_LEFT" maxHeight="50.0" minHeight="50.0" style="-fx-background-color: rgb(255,100,100);" VBox.vgrow="NEVER">
                <children>
                   <VBox alignment="CENTER" prefHeight="25.0" prefWidth="25.0">
                      <children>
@@ -22,25 +22,28 @@
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
                         </ImageView>
                      </children>
                      <HBox.margin>
-                        <Insets left="15.0" />
+                        <Insets left="5.0" />
                      </HBox.margin>
                   </VBox>
-                  <Label maxHeight="50.0" text="Personatges" translateX="30.0" HBox.hgrow="ALWAYS">
+                  <Label maxHeight="50.0" text="Jocs" translateX="75.0" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="24.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                </children>
             </HBox>
             <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="list" alignment="TOP_CENTER">
+                  <VBox fx:id="list_games" alignment="TOP_CENTER">
                      <children>
                         <AnchorPane maxHeight="50.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-border-width: 0 0 1 0; -fx-border-color: grey;" VBox.vgrow="ALWAYS">
                            <children>
