@@ -1,4 +1,4 @@
-package main.java.com.exercici0601;
+package com.exercici0601;
 
 import java.net.URL;
 import java.nio.file.Path;
@@ -13,9 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 
-public class ControllerCharacter implements Initializable {
+public class ControllerConsole implements Initializable {
     @FXML
     private Label nom, cpu, units, date;
 
@@ -50,6 +49,8 @@ public class ControllerCharacter implements Initializable {
     public void setUnits(String units) {
         this.units.setText(units);
     }
+
+
 
     public void setDate(String date) {
         this.date.setText(date);

@@ -1,10 +1,9 @@
-package main.java.com.exercici0601;
+package com.exercici0601;
 
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 
-import javax.naming.spi.InitialContextFactory;
 
 import com.utils.*;
 

@@ -1,13 +1,11 @@
-package main.java.com.exercici0601;
+package com.exercici0601;
 
-import com.utils.*;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.json.JSONArray;
@@ -16,11 +14,9 @@ import org.json.JSONObject;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 public class ControllerConsoles implements Initializable {
@@ -68,14 +64,14 @@ public class ControllerConsoles implements Initializable {
                 URL resource = this.getClass().getResource("/assets/subviewConsoles.fxml");
                 FXMLLoader loader = new FXMLLoader(resource);
                 Parent itemPane = loader.load();
-                ControllerItem3 itemController = loader.getController();
+                Controller3 controllerItem = loader.getController();
 
-                itemController.setCircleColor(color);
-                itemController.setCpu(cpu);
-                itemController.setDate(date);
-                itemController.setImage(pathImages + image);
-                itemController.setUnit(units);
-                itemController.setTitle(name);
+                controllerItem.setCircleColor(color);
+                controllerItem.setCpu(cpu);
+                controllerItem.setDate(date);
+                controllerItem.setImage(pathImages + image);
+                controllerItem.setUnit(units);
+                controllerItem.setTitle(name);
 
                 list.getChildren().add(itemPane);
             }
