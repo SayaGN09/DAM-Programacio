@@ -48,7 +48,8 @@ public class ControllerCharacters implements Initializable {
             Path path = Paths.get(jsonFileURL.toURI());
             String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             JSONArray jsonInfo = new JSONArray(content);
-
+            String pathImages = "/assets/images0601/";
+            
             list.getChildren().clear();
             for (int i = 0; i < jsonInfo.length(); i++) {
                 JSONObject character = jsonInfo.getJSONObject(i);
@@ -56,11 +57,21 @@ public class ControllerCharacters implements Initializable {
                 
                 // TODO: Aquí carregar subvista  
                 // amb les dades de cada objecte enlloc d'un Label
-                Label label = new Label(name);
-                label.setStyle("-fx-border-color: green;");
-                list.getChildren().add(label);
+                URL resource = this.getClass().getResource("/assets/subviewCharacters.fxml");
+                FXMLLoader loader = new FXMLLoader(resource);
+                Parent itemPane = loader.load();
+                ControllerItem1 itemController = loader.getController();
+
+                itemController.setCircleColor(color);
+                itemController.setImage(pathImages + image);
+                itemController.setTitle(name);
+                itemController.setSubtitle(game);
+
+                // añadimos el itemPane a la lista
+                list.getChildren().add(itemPane);
             }
         } catch (Exception e) {
+            System.err.println("Error loading JSON file: " + e.getMessage());
             e.printStackTrace();
         }
     }
